@@ -128,3 +128,7 @@ export class AppService {
   }
 }
 ```
+
+## Example
+
+A working example is available [here](/tests/src).
