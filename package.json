@@ -1,5 +1,5 @@
 {
-  "name": "@pg/nestjs-redis",
+  "name": "@pokeguys/nestjs-redis",
   "version": "0.0.1",
   "description": "Redis module based on ioredis package",
   "author": "PokeGuys",
