@@ -7,9 +7,9 @@
 ### Installation
 
 ```bash
-$ npm i --save @pg/nestjs-redis ioredis
+$ npm i --save @pokeguys/nestjs-redis ioredis
 # or
-$ yarn add @pg/nestjs-redis ioredis
+$ yarn add @pokeguys/nestjs-redis ioredis
 ```
 
 ### Usage

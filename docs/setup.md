@@ -1,13 +1,13 @@
 # How to use?
 
-Check this documentation for how to use module `@pg/nestjs-redis`.
+Check this documentation for how to use module `@pokeguys/nestjs-redis`.
 
 ## Installation
 
 ```bash
-$ npm i --save @pg/nestjs-redis ioredis
+$ npm i --save @pokeguys/nestjs-redis ioredis
 # or
-$ yarn add @pg/nestjs-redis ioredis
+$ yarn add @pokeguys/nestjs-redis ioredis
 ```
 
 ## Module
@@ -57,7 +57,7 @@ export class AppModule {}
 ```ts
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { RedisModule } from '@pg/nestjs-redis';
+import { RedisModule } from '@pokeguys/nestjs-redis';
 
 @Module({
   imports: [
@@ -77,7 +77,7 @@ export class AppModule {}
 ```ts
 // app.module.ts
 import { Module } from '@nestjs/common';
-import { RedisModule } from '@pg/nestjs-redis';
+import { RedisModule } from '@pokeguys/nestjs-redis';
 
 @Module({
   imports: [
@@ -104,7 +104,7 @@ export class AppModule {}
 ```ts
 // app.service.ts
 import { Injectable } from '@nestjs/common';
-import { InjectRedis, RedisClient } from '@pg/nestjs-redis';
+import { InjectRedis, RedisClient } from '@pokeguys/nestjs-redis';
 
 @Injectable()
 export class AppService {
@@ -117,7 +117,7 @@ export class AppService {
 ```ts
 // app.service.ts
 import { Injectable } from '@nestjs/common';
-import { InjectRedis, RedisClient } from '@pg/nestjs-redis';
+import { InjectRedis, RedisClient } from '@pokeguys/nestjs-redis';
 
 @Injectable()
 export class AppService {
