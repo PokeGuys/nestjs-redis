@@ -6,7 +6,7 @@
   "repository": "https://github.com/pokeguys/nestjs-redis.git",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write \"**/*.ts\"",
     "lint": "eslint \"lib/**/*.ts\" --fix",
     "prebuild": "rimraf dist",
