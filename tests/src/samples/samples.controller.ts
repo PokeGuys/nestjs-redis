@@ -10,9 +10,4 @@ export class SamplesController {
   async createDefaultConnection(@Body() createSampleDto: CreateSampleDto) {
     return this.samplesService.createDefault(createSampleDto);
   }
-
-  @Post('named')
-  async createNamedConnection(@Body() createSampleDto: CreateSampleDto) {
-    return this.samplesService.createNamed(createSampleDto);
-  }
 }

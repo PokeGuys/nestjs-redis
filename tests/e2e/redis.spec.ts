@@ -3,32 +3,31 @@ import { Test } from '@nestjs/testing';
 import { Server } from 'http';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { SentinelModule } from '../src/sentinel/sentinel.module';
 
-describe('IORedis - Sentinel', () => {
+describe('IORedis', () => {
   let server: Server;
   let app: INestApplication;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      imports: [AppModule, SentinelModule],
+      imports: [AppModule],
     }).compile();
     app = module.createNestApplication();
     server = app.getHttpServer();
     await app.init();
   });
 
-  it('should return created data from default connection', (done) => {
-    const createDto = { age: 4, name: 'Testing Sentinel', countryCode: 'Sentinel' };
+  it('should return created data', (done) => {
+    const createDto = { id: '1', title: 'Testing', message: 'HelloWorld' };
     request(server)
-      .post('/sentinel')
+      .post('/samples/default')
       .send(createDto)
       .expect(201)
       .end((err, { body }) => {
         expect(err).toBeNull();
-        expect(body.age).toEqual(createDto.age);
-        expect(body.name).toEqual(createDto.name);
-        expect(body.countryCode).toEqual(createDto.countryCode);
+        expect(body.id).toEqual(createDto.id);
+        expect(body.title).toEqual(createDto.title);
+        expect(body.message).toEqual(createDto.message);
         done();
       });
   });
