@@ -33,7 +33,7 @@ export class RedisCoreModule implements OnApplicationShutdown {
     };
     const connectionProvider = {
       provide: getClientToken(options.clientName),
-      useFactory: () => createClient(options),
+      useValue: createClient(options),
     };
     return {
       module: RedisCoreModule,
@@ -45,7 +45,7 @@ export class RedisCoreModule implements OnApplicationShutdown {
   static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
     const connectionProvider = {
       provide: getClientToken(options.name),
-      useFactory: async (redisOptions: RedisModuleOptions) => {
+      useFactory: (redisOptions: RedisModuleOptions) => {
         return createClient(redisOptions);
       },
       inject: [REDIS_MODULE_OPTIONS],
