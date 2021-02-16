@@ -2,7 +2,7 @@ import * as Redis from 'ioredis';
 import { RedisClient, RedisModuleOptions } from '../interfaces';
 import { DEFAULT_CLIENT_NAME } from '../redis.constants';
 
-export function getClientToken(name: string = DEFAULT_CLIENT_NAME) {
+export function getClientToken(name: string = DEFAULT_CLIENT_NAME): string {
   return name && name !== DEFAULT_CLIENT_NAME ? `${name}Connection` : DEFAULT_CLIENT_NAME;
 }
 

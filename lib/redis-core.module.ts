@@ -59,7 +59,7 @@ export class RedisCoreModule implements OnApplicationShutdown {
     };
   }
 
-  onApplicationShutdown() {
+  onApplicationShutdown(): void {
     const connection = this.moduleRef.get<Redis>(getClientToken(this.options.clientName));
     if (connection && !this.options.keepAlive) {
       connection.disconnect();
@@ -92,7 +92,7 @@ export class RedisCoreModule implements OnApplicationShutdown {
     return {
       provide: REDIS_MODULE_OPTIONS,
       useFactory: async (optionsFactory: RedisOptionsFactory) =>
-        await optionsFactory.createRedisOptions(options.name),
+        optionsFactory.createRedisOptions(options.name),
       inject,
     };
   }
