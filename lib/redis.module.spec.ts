@@ -54,7 +54,7 @@ describe('RedisModule', () => {
       moduleRef = await Test.createTestingModule({
         imports: [
           RedisModule.forRoot({
-            clientName: 'named',
+            connectionName: 'named',
             host: 'localhost',
             port: 6379,
             keepAlive: 1000,
@@ -80,7 +80,8 @@ describe('RedisModule', () => {
             imports: [
               RedisModule.forRootAsync({
                 name: 'named',
-                useFactory: () => ({
+                useFactory: (connectionName?: string) => ({
+                  connectionName,
                   uri: 'redis://localhost:6379/',
                 }),
               }),
@@ -98,8 +99,9 @@ describe('RedisModule', () => {
 
       describe('useClass', () => {
         class RedisModuleConfigService implements RedisOptionsFactory {
-          createRedisOptions(): RedisModuleOptions {
+          createRedisOptions(connectionName?: string): RedisModuleOptions {
             return {
+              connectionName,
               uri: 'redis://localhost:6379/',
             };
           }
@@ -129,8 +131,9 @@ describe('RedisModule', () => {
       describe('useExisting', () => {
         @Injectable()
         class RedisModuleConfigService implements RedisOptionsFactory {
-          createRedisOptions(): RedisModuleOptions {
+          createRedisOptions(connectionName?: string): RedisModuleOptions {
             return {
+              connectionName,
               uri: 'redis://localhost:6379/',
             };
           }
@@ -171,13 +174,15 @@ describe('RedisModule', () => {
             imports: [
               RedisModule.forRootAsync({
                 name: 'test1',
-                useFactory: () => ({
+                useFactory: (connectionName?: string) => ({
+                  connectionName,
                   uri: 'redis://localhost:6379/',
                 }),
               }),
               RedisModule.forRootAsync({
                 name: 'test2',
-                useFactory: () => ({
+                useFactory: (connectionName?: string) => ({
+                  connectionName,
                   uri: 'redis://localhost:6379/',
                 }),
               }),

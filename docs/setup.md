@@ -24,7 +24,7 @@ For more configuration options, please reference the API documentation of [iored
 |---|---|---|---|
 | uri | `string` |  | URL of the redis connection. If set the `port`, `host`, `family`, and `path` will be ignored. |
 | name | `string` |  | The name of redis master. This options only available for sentinel mode. |
-| clientName | `string` | `DefaultClient` | The name of the client. Used for redis client dependency injection. |
+| connectionName | `string` | `DefaultClient` | The name of the client. Used for redis client dependency injection. |
 | cluster | `RedisClusterModuleOptions` |  | The configuration for cluster mode. |
 
 #### RedisClusterModuleOptions
@@ -62,8 +62,9 @@ import { RedisModule } from '@pokeguys/nestjs-redis';
 @Module({
   imports: [
     RedisModule.forRootAsync({
-      useFactory: () => ({
-        clientName: 'conn',
+      name: 'conn',
+      useFactory: (connectionName?: string) => ({
+        connectionName,
         uri: 'redis://localhost:6379/'
       }),
     }),
