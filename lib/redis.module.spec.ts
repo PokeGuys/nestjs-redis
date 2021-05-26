@@ -1,7 +1,6 @@
 import { Injectable, Module } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as Redis from 'ioredis';
-import * as RedisMock from 'ioredis-mock';
 import { InjectRedis } from './common/redis.decorator';
 import { getClientToken } from './common/redis.util';
 import {
@@ -11,30 +10,7 @@ import {
 } from './interfaces/redis-module-options.interface';
 import { RedisModule } from './redis.module';
 
-jest.mock('ioredis', () => {
-  const Redis = require('ioredis-mock');
-
-  if (typeof Redis === 'object') {
-    // the first mock is an ioredis shim because ioredis-mock depends on it
-    // https://github.com/stipsan/ioredis-mock/blob/master/src/index.js#L101-L111
-    return {
-      Command: { _transformer: { argument: {}, reply: {} } },
-    };
-  }
-
-  let instance: any = null;
-
-  // second mock for our code
-  return function (...args) {
-    if (instance) {
-      return instance.createConnectedClient();
-    }
-
-    instance = new Redis(args);
-
-    return instance;
-  };
-});
+jest.mock('ioredis', () => require('ioredis-mock/jest'));
 
 describe('RedisModule', () => {
   beforeAll(() => new Redis());
@@ -54,7 +30,7 @@ describe('RedisModule', () => {
       moduleRef = await Test.createTestingModule({
         imports: [
           RedisModule.forRoot({
-            clientName: 'named',
+            connectionName: 'named',
             host: 'localhost',
             port: 6379,
             keepAlive: 1000,
@@ -63,7 +39,7 @@ describe('RedisModule', () => {
       }).compile();
 
       const client = moduleRef.get<RedisClient>(getClientToken('named'));
-      expect(client).toBeInstanceOf(RedisMock);
+      expect(client).toBeInstanceOf(Redis);
     });
 
     afterEach(async () => {
@@ -80,7 +56,8 @@ describe('RedisModule', () => {
             imports: [
               RedisModule.forRootAsync({
                 name: 'named',
-                useFactory: () => ({
+                useFactory: (connectionName?: string) => ({
+                  connectionName,
                   uri: 'redis://localhost:6379/',
                 }),
               }),
@@ -92,14 +69,15 @@ describe('RedisModule', () => {
         });
         it('should inject the redis with the given name', async () => {
           const client = moduleRef.get<RedisClient>(getClientToken('named'));
-          expect(client).toBeInstanceOf(RedisMock);
+          expect(client).toBeInstanceOf(Redis);
         });
       });
 
       describe('useClass', () => {
         class RedisModuleConfigService implements RedisOptionsFactory {
-          createRedisOptions(): RedisModuleOptions {
+          createRedisOptions(connectionName?: string): RedisModuleOptions {
             return {
+              connectionName,
               uri: 'redis://localhost:6379/',
             };
           }
@@ -122,15 +100,16 @@ describe('RedisModule', () => {
 
         it('should inject the redis with the given name', async () => {
           const client = moduleRef.get<RedisClient>(getClientToken('useClass'));
-          expect(client).toBeInstanceOf(RedisMock);
+          expect(client).toBeInstanceOf(Redis);
         });
       });
 
       describe('useExisting', () => {
         @Injectable()
         class RedisModuleConfigService implements RedisOptionsFactory {
-          createRedisOptions(): RedisModuleOptions {
+          createRedisOptions(connectionName?: string): RedisModuleOptions {
             return {
+              connectionName,
               uri: 'redis://localhost:6379/',
             };
           }
@@ -159,7 +138,7 @@ describe('RedisModule', () => {
 
         it('should inject the redis with the given name', async () => {
           const client = moduleRef.get<RedisClient>(getClientToken('useExisting'));
-          expect(client).toBeInstanceOf(RedisMock);
+          expect(client).toBeInstanceOf(Redis);
         });
       });
     });
@@ -171,13 +150,15 @@ describe('RedisModule', () => {
             imports: [
               RedisModule.forRootAsync({
                 name: 'test1',
-                useFactory: () => ({
+                useFactory: (connectionName?: string) => ({
+                  connectionName,
                   uri: 'redis://localhost:6379/',
                 }),
               }),
               RedisModule.forRootAsync({
                 name: 'test2',
-                useFactory: () => ({
+                useFactory: (connectionName?: string) => ({
+                  connectionName,
                   uri: 'redis://localhost:6379/',
                 }),
               }),
@@ -190,12 +171,12 @@ describe('RedisModule', () => {
 
         it('should inject the redis with the name "test1"', async () => {
           const client = moduleRef.get<RedisClient>(getClientToken('test1'));
-          expect(client).toBeInstanceOf(RedisMock);
+          expect(client).toBeInstanceOf(Redis);
         });
 
         it('should inject the redis with the name "test2"', async () => {
           const client = moduleRef.get<RedisClient>(getClientToken('test2'));
-          expect(client).toBeInstanceOf(RedisMock);
+          expect(client).toBeInstanceOf(Redis);
         });
       });
     });
@@ -220,9 +201,40 @@ describe('RedisModule', () => {
       await app.init();
 
       const provider = module.get(TestProvider);
-      expect(provider.getClient()).toBeInstanceOf(RedisMock);
+      expect(provider.getClient()).toBeInstanceOf(Redis);
 
       await app.close();
+    });
+  });
+
+  describe('Cluster mode', () => {
+    let moduleRef: TestingModule;
+    it('should inject the redis with the given name', async () => {
+      moduleRef = await Test.createTestingModule({
+        imports: [
+          RedisModule.forRoot({
+            connectionName: 'named',
+            cluster: {
+              nodes: [
+                {
+                  host: 'localhost',
+                  port: 7000,
+                },
+              ],
+              redisOptions: {
+                enableReadyCheck: true,
+              },
+            },
+          }),
+        ],
+      }).compile();
+
+      const client = moduleRef.get<RedisClient>(getClientToken('named'));
+      expect(client).toBeInstanceOf(Redis.Cluster);
+    });
+
+    afterEach(async () => {
+      await moduleRef.close();
     });
   });
 });
