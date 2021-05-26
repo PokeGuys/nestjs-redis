@@ -8,7 +8,7 @@ export type RedisClusterModuleOptions = {
 } & Partial<ClusterOptions>;
 
 export type RedisModuleOptions = {
-  clientName?: string;
+  connectionName?: string;
   uri?: string;
   cluster?: RedisClusterModuleOptions;
   connectionFactory?: (connection: any, name: string) => any;
@@ -22,6 +22,9 @@ export interface RedisModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'>
   name?: string;
   useExisting?: Type<RedisOptionsFactory>;
   useClass?: Type<RedisOptionsFactory>;
-  useFactory?: (...args: any[]) => Promise<RedisModuleOptions> | RedisModuleOptions;
+  useFactory?: (
+    connectionName?: string,
+    ...args: any[]
+  ) => Promise<RedisModuleOptions> | RedisModuleOptions;
   inject?: any[];
 }
