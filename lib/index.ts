@@ -1,3 +1,3 @@
-export * from './common/redis.decorator';
+export * from './common';
 export * from './interfaces';
 export * from './redis.module';
