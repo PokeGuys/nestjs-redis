@@ -46,7 +46,7 @@
     "ioredis": "4.28.0",
     "ioredis-mock": "5.6.0",
     "jest": "27.3.1",
-    "lint-staged": "11.2.4",
+    "lint-staged": "11.2.5",
     "prettier": "2.4.1",
     "reflect-metadata": "0.1.13",
     "release-it": "14.11.6",
