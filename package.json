@@ -44,7 +44,7 @@
     "eslint-plugin-prettier": "4.0.0",
     "husky": "7.0.4",
     "ioredis": "4.28.5",
-    "ioredis-mock": "6.13.0",
+    "ioredis-mock": "7.4.0",
     "jest": "27.5.1",
     "lint-staged": "12.4.1",
     "prettier": "2.6.2",
