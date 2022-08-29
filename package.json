@@ -28,7 +28,7 @@
     "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.1.1",
+    "@commitlint/cli": "17.1.2",
     "@commitlint/config-angular": "17.1.0",
     "@nestjs/common": "9.0.1",
     "@nestjs/core": "9.0.1",
