@@ -7,7 +7,7 @@ services:
       - 6379:6379
 
   redis-cluster:
-    image: grokzen/redis-cluster:6.2.1
+    image: grokzen/redis-cluster:6.2.8
     ports:
       - 7000-7005:7000-7005
     environment:
